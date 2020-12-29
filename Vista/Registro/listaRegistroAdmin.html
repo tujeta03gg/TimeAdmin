@@ -1,0 +1,41 @@
+<body onload="cargarListaRegistro()">   
+    <div class="card">
+        <div class="card-content">
+            <div class="toolbar">
+                <!--        Here you can write extra buttons/actions for the toolbar      
+                -->
+                <div class="togglebutton">
+                    <input class="form-control" id="txtSearch" onkeyup="//buscar()" placeholder="Busqueda" type="text">
+                    <div class="row">
+                        <div class="col-6"><a>Fecha de inicio</a><br><input type="date" id="fechaInicio" value="2020-01-01"></div>
+                        <div class="col-6"><a>Fecha fin</a><br><input type="date" id="fechaFin" value="2020-12-30"></div>
+                    </div><br>
+                    <button onclick="mostrarRegistrosSupervisor()" class=" btn btn-success">Buscar todos</button>
+                    <button onclick="mostrarRegistrosSupervisorAux()" class="btn btn-success">Buscar Supervisor</button>
+                </div>
+            </div>
+            <div class="material-datatables">
+                <div class="table-responsive">
+                    <!--<input class="form-control" id="txtSearch" onkeyup="busquedaAxiliar()" placeholder="Busqueda" type="text">-->
+                    <table class="table">
+                        <thead>
+                            <tr> 
+                                <th style='display:none'>Num</th>
+                                <th>Fecha</th>  
+                                <th>Tiempo</th>                        
+                                <th>Servicio</th>
+                                <th>Cliente</th>
+                                <th>Supervisor</th>
+                                <th>Auxiliar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbRegistro">                                                
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+        <!-- end content-->
+    </div>
+    <!--  end card  -->

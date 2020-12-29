@@ -1,0 +1,39 @@
+<body>
+    <div class="wrapper">     
+        <div class="">        
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div>
+                                    <button class='btn btn-danger' onclick='cerrarGuardarCliente()'>X</button>
+                                </div>
+                                <div class="card-content">
+
+                                    <h4 class="card-title">Actualizar Cliente</h4>
+                                    <div class="form-group label-floating">
+                                        <input class="form-control" id="txtIdCliente" type="hidden">
+                                        <label class="control-label">Nombre:</label>
+                                        <input id="txtNombre" type="text" class="form-control">
+                                    </div>
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">RFC:</label>
+                                        <input id="txtRFC" type="text" class="form-control">
+                                    </div>
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Direccion:</label>
+                                        <input id="txtDireccion" type="text" class="form-control">
+                                    </div> 
+
+                                    <button  onclick="modificarCliente()" type="submit" class="btn btn-fill btn-success">Guardar</button>
+
+                                </div>
+                            </div>
+                        </div>                                            
+                    </div>
+                </div>
+            </div>               
+        </div>
+    </div>  
+</body>

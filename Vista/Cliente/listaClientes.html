@@ -1,0 +1,35 @@
+<body onload="cargarListaClientes()">   
+    <div class="card">
+        <button class='btn btn-primary' onclick="cargarGuardarCliente()">Nuevo</button>
+        <button class='btn btn-social' onclick="mostrarClientesBaja()">Inactvos</button>
+        <input class="form-control" id="txtSearch" onkeyup="busquedaCliente()" placeholder="Busqueda" type="text">
+        <div class="card-content">
+            <div class="toolbar">
+                <!--        Here you can write extra buttons/actions for the toolbar      
+                -->
+                <div class="togglebutton">
+                </div>
+            </div>
+            <div class="material-datatables">
+                <div class="table-responsive">
+                    <!--<input class="form-control" id="txtSearch" onkeyup="busquedaAxiliar()" placeholder="Busqueda" type="text">-->
+                    <table class="table">
+                        <thead>
+                            <tr> 
+                                <th>Nombre</th>  
+                                <th>RFC</th>                        
+                                <th>Direccion</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbCliente">                                                
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+        <!-- end content-->
+    </div>
+    <!--  end card  -->
+
+</body>

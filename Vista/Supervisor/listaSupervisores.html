@@ -1,0 +1,40 @@
+<body onload="    ">   
+    <div class="card">
+        <button class='btn btn-primary' onclick="cargarGuardarSupervisor()">Nuevo</button>
+        <button class='btn btn-social' onclick="mostrarSupervisoresBaja()">Inactvos</button>
+        <input class="form-control" id="txtSearch" onkeyup="busquedaSupervisor()" placeholder="Busqueda" type="text">
+        <div>
+        </div>
+        <div class="card-content">
+            <div class="toolbar">
+                <!--        Here you can write extra buttons/actions for the toolbar      
+                -->
+                <div class="togglebutton">
+                </div>
+            </div>
+            <div class="material-datatables">
+                <div class="table-responsive">
+                    <!--<input class="form-control" id="txtSearch" onkeyup="busquedaAxiliar()" placeholder="Busqueda" type="text">-->
+                    <table class="table">
+                        <thead>
+                            <tr> 
+                                <th style='display:none'>Num</th>
+                                <th>Nombre</th>  
+                                <th>Apellido</th>                        
+                                <th>Celular</th>
+                                <th>Correo</th>
+                                <th>Sueldo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbAuxiliar">                                                
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+        <!-- end content-->
+    </div>
+    <!--  end card  -->
+
+</body>
