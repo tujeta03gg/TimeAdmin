@@ -29,8 +29,8 @@ $result = mysqli_query($mysqli, $query);
                         ?>
                     </select>
                     <div class="row">
-                        <div class="col-6"><a>Fecha de inicio</a><br><input type="date" id="fechaInicio" value="2020-01-01"></div>
-                        <div class="col-6"><a>Fecha fin</a><br><input type="date" id="fechaFin" value="2020-12-30"></div>
+                        <div class="col-6"><a>Fecha de inicio</a><br><input type="date" id="fechaInicio" value="2021-01-01"></div>
+                        <div class="col-6"><a>Fecha fin</a><br><input type="date" id="fechaFin" value="2021-12-31"></div>
                     </div><br>
                     <button onclick="generarTotales()" class=" btn btn-success">Generar</button>
                 </div>

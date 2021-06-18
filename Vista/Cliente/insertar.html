@@ -22,6 +22,81 @@
                                 <label class="control-label">Direccion:</label>
                                 <input id="txtDireccion" type="text" class="form-control">
                             </div>
+                            <div>
+                                <div class="form-group label-floating">
+                                    <label class="control-label">Ubicación</label>
+
+                                    <div id="map"></div>
+
+                                    <input id="txtLongitud" type="hidden" disabled>
+
+                                    <input id="txtLatitud" type="text" disabled>
+                                </div>
+
+                                <input id="coords" type="hidden">    
+
+                                <script>
+                                    var marker;          //variable del marcador
+                                    var coords = {lng:0,lat:0};    //coordenadas obtenidas con la geolocalización
+
+                                    //Funcion principal
+                                    initMap = function ()
+                                    {
+
+                                        //usamos la API para geolocalizar el usuario
+                                        setMapa(coords);
+
+                                    };
+
+
+                                    function setMapa(coords)
+                                    {
+                                        //Se crea una nueva instancia del objeto mapa
+                                        var map = new google.maps.Map(document.getElementById('map'),
+                                                {
+                                                    zoom: 13,
+                                                    center: new google.maps.LatLng(coords.lat, coords.lng)
+
+                                                });
+
+                                        //Creamos el marcador en el mapa con sus propiedades
+                                        //para nuestro obetivo tenemos que poner el atributo draggable en true
+                                        //position pondremos las mismas coordenas que obtuvimos en la geolocalización
+                                        marker = new google.maps.Marker({
+                                            map: map,
+                                            draggable: true,
+                                            animation: google.maps.Animation.DROP,
+                                            position: new google.maps.LatLng(coords.lat, coords.lng),
+
+                                        });
+                                        //agregamos un evento al marcador junto con la funcion callback al igual que el evento dragend que indica 
+                                        //cuando el usuario a soltado el marcador
+                                        marker.addListener('click', toggleBounce);
+
+                                        marker.addListener('dragend', function (event)
+                                        {
+                                            //escribimos las coordenadas de la posicion actual del marcador dentro del input #coords
+                                            document.getElementById("coords").value = this.getPosition().lat() + "," + this.getPosition().lng();
+
+                                            document.getElementById('txtLatitud').value = this.getPosition().lat();
+                                            document.getElementById('txtLongitud').value = this.getPosition().lng();
+                                        });
+                                    }
+
+                                    //callback al hacer clic en el marcador lo que hace es quitar y poner la animacion BOUNCE
+                                    function toggleBounce() {
+                                        if (marker.getAnimation() !== null) {
+                                            marker.setAnimation(null);
+                                        } else {
+                                            marker.setAnimation(google.maps.Animation.BOUNCE);
+                                        }
+                                    }
+
+                                    // Carga de la libreria de google maps 
+
+                                </script>
+                                <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCaGwwAMYqolwe9LmliR_wkKCgjDrTKQVc&AMP;callback=initMap"></script>
+                            </div>
                             <button  onclick="guardarCliente()" type="submit" class="btn btn-success">Guardar</button>
                         </div>
                     </div>                                            

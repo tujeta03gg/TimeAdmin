@@ -5,8 +5,8 @@ include '../../Controlador/conexion.php';
 //$usuario= json_decode($json,true);
 
 $query = 'SELECT * FROM vst_Supervisores WHERE estatusUsuario=1;';
-$query2 = 'SELECT * FROM Cliente;';
-$query3 = 'SELECT * FROM Servicio;';
+$query2 = 'SELECT * FROM Cliente WHERE estatusCliente=1;';
+$query3 = 'SELECT * FROM Servicio WHERE estatusServicio=1;';
 
 $result = mysqli_query($mysqli, $query);
 $result2 = mysqli_query($mysqli, $query2);
@@ -53,8 +53,11 @@ $result3 = mysqli_query($mysqli, $query3);
             }
             ?>
         </select><br>
-        <a>Tiempo</a><br>
-        <input type="text" name="tiempo" id="tiempo" class="form-control"><br>
+        <div><a>Horas</a>
+            <input type="number" name="horas" id="horas" class="form-control" min="0" value="0">
+            <a>Minutos</a>
+            <input type="number" name="minutos" id="minutos" class="form-control" min="0" max="60" value="0">
+        </div><br>
         <button onclick="hacerRegistro()" class="btn btn-success form-control" >Hacer registro</button>
     </div>
 </div>

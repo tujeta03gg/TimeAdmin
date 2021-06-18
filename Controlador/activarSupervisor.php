@@ -8,7 +8,7 @@ $json = $_POST['json'];
 
 $id = json_decode($json, true);
 
-$query = 'UPDATE usuario SET estatusUsuario=1 WHERE idUsuario=' . $id['idUsuario'] . ';';
+$query = 'UPDATE Usuario SET estatusUsuario=1 WHERE idUsuario=' . $id['idUsuario'] . ';';
 
 $result = mysqli_query($mysqli, $query);
 

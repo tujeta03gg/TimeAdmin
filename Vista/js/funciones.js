@@ -6,7 +6,24 @@ var supervisores;
 var usuarioActual;
 var registrosAuxiliar;
 var registrosSupervisor;
+var Asistencias;
 
+
+function cargarAsistencia() {
+    window.location = "Asistencia/TomarAsistencia.html";
+//    $.ajax(
+//            {
+//                type: "GET",
+//                url: "Asistencia/TomarAsistencia.html",
+//                success: function (data) {
+//                    $('#divMainContainer').html(data);
+//                    $("#divMainContainer").addClass("col-12");
+//                    
+//                    
+//                }
+//            }
+//    );
+}
 
 function tableToExcel(tableID, filename = '') {
     var downloadLink;
@@ -36,7 +53,7 @@ function tableToExcel(tableID, filename = '') {
 
         //triggering the function
         downloadLink.click();
-    }
+}
 }
 
 
@@ -94,6 +111,7 @@ function login() {
     });
 
 }
+;
 
 function logout() {
     localStorage.clear();
@@ -140,12 +158,12 @@ function cargarPrincipalSupervisor() {
 }
 
 
-function validarSuper(){
+function validarSuper() {
     superUsuario = document.getElementById("super").value;
-    if(superUsuario=="123"){
-        window.location="principalSuperUsuario.html";
-    }else{
-        
+    if (superUsuario == "123") {
+        window.location = "principalSuperUsuario.html";
+    } else {
+
     }
 }
 //***********REGISTRO DE CLIENTE*********
@@ -272,12 +290,18 @@ function guardarCliente() {
 
     var direccion = $('#txtDireccion').val();
 
+    var latitud = $('#txtLatitud').val();
+
+    var longitud = $('#txtLongitud').val();
+
 
 
     var Cliente = {
         nombre: nombre,
         direccion: direccion,
-        rfc: rfc
+        rfc: rfc,
+        latitud: latitud,
+        longitud: longitud
     };
 
     var json = {json: JSON.stringify(Cliente)};
@@ -366,6 +390,8 @@ function cargarModificarCliente(posicion) {
         $("#txtNombre").val(ClienteActual.nombreCliente);
         $("#txtRFC").val(ClienteActual.rfc);
         $("#txtDireccion").val(ClienteActual.direccion);
+        $("#txtLatitud").val(ClienteActual.latitud);
+        $("#txtLongitud").val(ClienteActual.longitud);
 
         $("#secundario").removeClass("col-0");
         $("#secundario").addClass("col-4");
@@ -379,6 +405,10 @@ function cargarModificarCliente(posicion) {
 }
 
 function modificarCliente() {
+
+    //-101.66886337768557 21.1251761346968
+    //-101.574820777771 21.10290381393967
+
     var idCliente = $('#txtIdCliente').val();
 
     var nombreCliente = $('#txtNombre').val();
@@ -387,11 +417,18 @@ function modificarCliente() {
 
     var direccion = $('#txtDireccion').val();
 
+    var latitud = $('#txtLatitud').val();
+
+    var longitud = $('#txtLongitud').val();
+
     var Cliente = {
         idCliente: idCliente,
         rfc: rfc,
         nombreCliente: nombreCliente,
-        direccion: direccion
+        direccion: direccion,
+        latitud: latitud,
+        longitud: longitud
+
     };
 
     var json = {json: JSON.stringify(Cliente)};
@@ -702,6 +739,48 @@ function modificarServicio() {
     );
 }
 
+function busquedaServicio() {
+
+
+    bus = $('#txtSearch').val();
+
+    var Busqueda = {
+        bus: bus
+    };
+
+    var json = {json: JSON.stringify(Busqueda)};
+
+    $.ajax(
+            {
+                type: "POST",
+                url: "../Controlador/buscarServicio.php",
+                data: json,
+                success: function (outPut) {
+                    datos = JSON.parse(outPut);
+
+                    servicios = datos;
+
+                    var tabla = "";
+
+                    for (var i = 0; i < datos.length; i++) {
+
+                        tabla += "<tr>";
+                        tabla += "<td id='idServicio' name='idServicio' style='display:none'>" + datos[i].idServicio + "</td>";
+                        tabla += "<td>" + datos[i].nombreServicio + "</td>";
+                        tabla += "<td><button class='btn btn-warning text-white' onclick='cargarModificarServicio(" + i + ")'>Modificar</button></td>";
+                        tabla += "<td><button class='btn btn-danger' onclick='eliminarServicio(" + i + ")'>Eliminar</button></td>";
+                        tabla += "</tr>";
+
+                    }
+
+                    $('#tbServicio').html(tabla);
+
+                }
+
+            }
+    );
+}
+
 
 //***********REGISTRO DE SERVICIO*********
 
@@ -739,7 +818,11 @@ function cargarHacerRegistro() {
 
 function hacerRegistro() {
 
-    var tiempo = $('#tiempo').val();
+    var tiempo;
+
+    var horas = $('#horas').val();
+
+    var minutos = $('#minutos').val();
 
     var idAuxiliar = $('#idAuxiliar').val();
 
@@ -749,6 +832,9 @@ function hacerRegistro() {
 
     var idSupervisor = $('#idSupervisor').val();
 
+    tiempo = horas;
+
+    tiempo = parseFloat(parseFloat(tiempo) + parseFloat(minutos / 60));
 
 
     var servicio = {
@@ -814,7 +900,11 @@ function cargarHacerRegistroSupervisor() {
 
 function hacerRegistroSupervisor() {
 
-    var tiempo = $('#tiempo').val();
+    var tiempo;
+
+    var horas = $('#horas').val();
+
+    var minutos = $('#minutos').val();
 
     var idServicio = $('#idServicio').val();
 
@@ -822,7 +912,9 @@ function hacerRegistroSupervisor() {
 
     var idSupervisor = $('#idSupervisor').val();
 
+    tiempo = horas;
 
+    tiempo = parseFloat(parseFloat(tiempo) + parseFloat(minutos / 60));
 
     var servicio = {
         tiempo: tiempo,
@@ -842,7 +934,7 @@ function hacerRegistroSupervisor() {
                 alert("Se ha guardado el registro");
 
             } else {
-                alert("Ocurrio un error"+JSON.stringify(data));
+                alert("Ocurrio un error" + JSON.stringify(data));
             }
         }
 
@@ -959,8 +1051,8 @@ function cargarGuardarAuxiliar() {
         $("#secundario").show();
         $("#divMainContainer").removeClass("col-12");
         $("#divMainContainer").addClass("col-8");
-        document.getElementById("txtSueldo").type="hidden";
-        document.getElementById("txtSueldo").value=0;
+        document.getElementById("txtSueldo").type = "hidden";
+        document.getElementById("txtSueldo").value = 0;
     }
     );
 }
@@ -986,7 +1078,7 @@ function guardarAuxiliar() {
     var celular = $('#txtCelular').val();
 
     var contraseña = $('#txtContraseña').val();
-    
+
     var sueldo = $('#txtSueldo').val();
 
 
@@ -1100,8 +1192,8 @@ function cargarModificarAuxiliar(posicion) {
 
         $("#divMainContainer").removeClass("col-12");
         $("#divMainContainer").addClass("col-8");
-        
-        document.getElementById("txtSueldo").type="hidden";
+
+        document.getElementById("txtSueldo").type = "hidden";
 
     });
 }
@@ -1110,7 +1202,7 @@ function modificarAuxiliar() {
     var idUsuario = $('#txtIdUsuario').val();
 
     var nombre = $('#txtNombre').val();
-    
+
     var sueldo = $('#txtSueldo').val();
 
     var apellido = $('#txtApellido').val();
@@ -1123,7 +1215,7 @@ function modificarAuxiliar() {
 
     var auxiliar = {
         idUsuario: idUsuario,
-        sueldo:sueldo,
+        sueldo: sueldo,
         nombre: nombre,
         apellido: apellido,
         celular: celular,
@@ -1143,7 +1235,7 @@ function modificarAuxiliar() {
                 cerrarGuardarAuxiliar();
                 cargarVerAuxiliares();
             } else {
-                alert("ocurrio un error");
+                alert("ocurrio un error" + data);
             }
         }
     }
@@ -1169,7 +1261,7 @@ function busquedaAuxiliar() {
                 data: json,
                 success: function (outPut) {
                     datos = JSON.parse(outPut);
-                    
+
                     auxiliares = datos;
 
                     var tabla = "";
@@ -1195,23 +1287,21 @@ function busquedaAuxiliar() {
     );
 }
 
+
+
+//********** MODULO DE AUXILIAR
 //***********LISTA REGISTRO***********
 
 
 
-
-
-function cargarListaRegistro() {
-    cargarVerRegistros();
-}
-
 function cargarVerRegistros() {
+
     $.ajax(
             {
                 type: "GET",
                 url: "Registro/listaRegistro.html",
                 success: function (data) {
-                    mostrarRegistros();
+
                     $('#divMainContainer').html(data);
                     $("#divMainContainer").addClass("col-12");
                 }
@@ -1220,13 +1310,27 @@ function cargarVerRegistros() {
 
 }
 
-function mostrarRegistros() {
+function mostrarRegistrosAuxiliar() {
+
+    fechaInicio = $('#fechaInicio').val();
+    fechaFin = $('#fechaFin').val();
+
+    var Busqueda = {
+        fechaInicio: fechaInicio,
+        fechaFin: fechaFin,
+        idUsuario: localStorage.getItem("idUsuario")
+    };
+
+    var json = {json: JSON.stringify(Busqueda)};
+
     $.ajax(
             {
-                type: "GET",
+                type: "POST",
                 asyc: true,
+                data: json,
                 url: "../Controlador/listaRegistro.php",
                 success: function (outPut) {
+                    //alert(JSON.stringify(outPut));
                     if (outPut == 0) {
                         alert("no hay registros el dia de hoy");
                     } else {
@@ -1239,7 +1343,7 @@ function mostrarRegistros() {
                             tabla += "<td id='idRegistro' name='idRegistro' style='display:none'>" + data[i].idServicioCliente + "</td>";
                             tabla += "<td>" + data[i].fecha + "</td>";
                             tabla += "<td>" + data[i].hora + "</td>";
-                            tabla += "<td>" + data[i].tiempo + "</td>";
+                            tabla += "<td>" + data[i].tiempo.substring(0, 4) + "</td>";
                             tabla += "<td>" + data[i].nombreServicio + "</td>";
                             tabla += "<td>" + data[i].nombreCliente + "</td>";
                             tabla += "<td>" + data[i].supervisor + "</td>";
@@ -1256,11 +1360,8 @@ function mostrarRegistros() {
 }
 
 
-function cargarListaRegistroSupervisor() {
-    cargarVerRegistrosSupervisor();
-}
 
-function cargarVerTodosRegistrosSupervisor() {
+function cargarVerRegistrosSupervisorAux() {
 
     $.ajax(
             {
@@ -1270,6 +1371,7 @@ function cargarVerTodosRegistrosSupervisor() {
                 success: function (data) {
                     $('#divMainContainer').html(data);
                     $("#divMainContainer").addClass("col-12");
+
                 }
             }
     );
@@ -1308,7 +1410,7 @@ function mostrarRegistrosSupervisorAux() {
                             tabla += "<tr>";
                             tabla += "<td id='idRegistro' name='idRegistro' style='display:none'>" + datos[i].idServicioCliente + "</td>";
                             tabla += "<td>" + datos[i].fecha + "</td>";
-                            tabla += "<td>" + datos[i].tiempo + "</td>";
+                            tabla += "<td>" + datos[i].tiempo.substring(0, 4) + "</td>";
                             tabla += "<td>" + datos[i].nombreServicio + "</td>";
                             tabla += "<td>" + datos[i].nombreCliente + "</td>";
                             tabla += "<td>" + datos[i].supervisor + "</td>";
@@ -1355,7 +1457,7 @@ function mostrarRegistrosSupervisor() {
                             tabla += "<tr>";
                             tabla += "<td id='idRegistro' name='idRegistro' style='display:none'>" + datos[i].idServicioCliente + "</td>";
                             tabla += "<td>" + datos[i].fecha + "</td>";
-                            tabla += "<td>" + datos[i].tiempo + "</td>";
+                            tabla += "<td>" + datos[i].tiempo.substring(0, 4) + "</td>";
                             tabla += "<td>" + datos[i].nombreServicio + "</td>";
                             tabla += "<td>" + datos[i].nombreCliente + "</td>";
                             tabla += "<td>" + datos[i].supervisor + "</td>";
@@ -1423,7 +1525,7 @@ function mostrarMisRegistrosSupervisorEmpresa() {
                             tabla += "<td id='idRegistro' name='idRegistro' style='display:none'>" + datos[i].idServicioCliente + "</td>";
                             tabla += "<td>" + datos[i].fecha + "</td>";
                             tabla += "<td>" + datos[i].hora + "</td>";
-                            tabla += "<td>" + datos[i].tiempo + "</td>";
+                            tabla += "<td>" + datos[i].tiempo.substring(0, 4) + "</td>";
                             tabla += "<td>" + datos[i].nombreServicio + "</td>";
                             tabla += "<td>" + datos[i].nombreCliente + "</td>";
                             tabla += "<td>" + datos[i].supervisor + "</td>";
@@ -1470,7 +1572,7 @@ function mostrarMisRegistrosSupervisor() {
                             tabla += "<td id='idRegistro' name='idRegistro' style='display:none'>" + datos[i].idServicioCliente + "</td>";
                             tabla += "<td>" + datos[i].fecha + "</td>";
                             tabla += "<td>" + datos[i].hora + "</td>";
-                            tabla += "<td>" + datos[i].tiempo + "</td>";
+                            tabla += "<td>" + datos[i].tiempo.substring(0, 4) + "</td>";
                             tabla += "<td>" + datos[i].nombreServicio + "</td>";
                             tabla += "<td>" + datos[i].nombreCliente + "</td>";
                             tabla += "<td>" + datos[i].supervisor + "</td>";
@@ -1489,7 +1591,7 @@ function mostrarMisRegistrosSupervisor() {
 //********* APARTADO DE REGISTROS DE LOS SUPERVISORES
 
 function cargarVerTodosRegistrosSupervisor() {
-    
+
     $.ajax(
             {
                 type: "GET",
@@ -1498,7 +1600,7 @@ function cargarVerTodosRegistrosSupervisor() {
                 success: function (data) {
                     $('#divMainContainer').html(data);
                     $("#divMainContainer").addClass("col-12");
-                    document.getElementById("btnMonto").disabled=true;
+                    document.getElementById("btnMonto").disabled = true;
                     //document.getElementById("btnExcel").disabled=true;
                 }
             }
@@ -1538,7 +1640,7 @@ function mostrarTodosRegistrosSupervisorSupervisor() {
                             tabla += "<td id='idRegistro' name='idRegistro' style='display:none'>" + datos[i].idServicioCliente + "</td>";
                             tabla += "<td>" + datos[i].fecha + "</td>";
                             tabla += "<td>" + datos[i].hora + "</td>";
-                            tabla += "<td>" + datos[i].tiempo + "</td>";
+                            tabla += "<td>" + datos[i].tiempo.substring(0, 4) + "</td>";
                             tabla += "<td>" + datos[i].nombreServicio + "</td>";
                             tabla += "<td>" + datos[i].nombreCliente + "</td>";
                             tabla += "<td>" + datos[i].supervisor + "</td>";
@@ -1585,7 +1687,7 @@ function mostrarTodosRegistrosSupervisor() {
                             tabla += "<td id='idRegistro' name='idRegistro' style='display:none'>" + datos[i].idServicioCliente + "</td>";
                             tabla += "<td>" + datos[i].fecha + "</td>";
                             tabla += "<td>" + datos[i].hora + "</td>";
-                            tabla += "<td>" + datos[i].tiempo + "</td>";
+                            tabla += "<td>" + datos[i].tiempo.substring(0, 4) + "</td>";
                             tabla += "<td>" + datos[i].nombreServicio + "</td>";
                             tabla += "<td>" + datos[i].nombreCliente + "</td>";
                             tabla += "<td>" + datos[i].supervisor + "</td>";
@@ -1604,7 +1706,7 @@ function mostrarTodosRegistrosSupervisor() {
 //********* APARTADO DE REGISTROS DE LOS AUXILIARES
 
 function cargarVerTodosRegistrosAuxiliar() {
-    
+
     $.ajax(
             {
                 type: "GET",
@@ -1613,7 +1715,7 @@ function cargarVerTodosRegistrosAuxiliar() {
                 success: function (data) {
                     $('#divMainContainer').html(data);
                     $("#divMainContainer").addClass("col-12");
-                    document.getElementById("btnMonto").disabled=true;
+                    document.getElementById("btnMonto").disabled = true;
                     //document.getElementById("btnExcel").disabled=true;
                 }
             }
@@ -1621,7 +1723,7 @@ function cargarVerTodosRegistrosAuxiliar() {
 
 }
 
-function buscarTodosRegistrosAuxiliar(){
+function buscarTodosRegistrosAuxiliar() {
     fechaInicio = $('#fechaInicio').val();
     fechaFin = $('#fechaFin').val();
     auxiliar = $('#txtSearch').val();
@@ -1653,11 +1755,11 @@ function buscarTodosRegistrosAuxiliar(){
                             tabla += "<td id='idRegistro' name='idRegistro' style='display:none'>" + datos[i].idServicioCliente + "</td>";
                             tabla += "<td>" + datos[i].fecha + "</td>";
                             tabla += "<td>" + datos[i].hora + "</td>";
-                            tabla += "<td>" + datos[i].tiempo + "</td>";
+                            tabla += "<td>" + datos[i].tiempo.substring(0, 4) + "</td>";
                             tabla += "<td>" + datos[i].nombreServicio + "</td>";
                             tabla += "<td>" + datos[i].nombreCliente + "</td>";
-                            tabla += "<td>" + datos[i].supervisor+" "+datos[i].apellidoSupervisor+ "</td>";
-                            tabla += "<td>" + datos[i].auxiliar+" "+datos[i].apellidoAuxiliar+ "</td>";
+                            tabla += "<td>" + datos[i].supervisor + " " + datos[i].apellidoSupervisor + "</td>";
+                            tabla += "<td>" + datos[i].auxiliar + " " + datos[i].apellidoAuxiliar + "</td>";
                             tabla += "<td>...</td>";
                             tabla += "</tr>";
                         }
@@ -1701,14 +1803,14 @@ function mostrarTodosRegistrosAuxiliar() {
                             tabla += "<td id='idRegistro' name='idRegistro' style='display:none'>" + datos[i].idServicioCliente + "</td>";
                             tabla += "<td>" + datos[i].fecha + "</td>";
                             tabla += "<td>" + datos[i].hora + "</td>";
-                            tabla += "<td>" + datos[i].tiempo + "</td>";
+                            tabla += "<td>" + datos[i].tiempo.substring(0, 4) + "</td>";
                             tabla += "<td>" + datos[i].nombreServicio + "</td>";
                             tabla += "<td>" + datos[i].nombreCliente + "</td>";
-                            tabla += "<td>" + datos[i].supervisor+" "+datos[i].apellidoSupervisor+ "</td>";
-                            tabla += "<td>" + datos[i].auxiliar+" "+datos[i].apellidoAuxiliar+ "</td>";
+                            tabla += "<td>" + datos[i].supervisor + " " + datos[i].apellidoSupervisor + "</td>";
+                            tabla += "<td>" + datos[i].auxiliar + " " + datos[i].apellidoAuxiliar + "</td>";
                             tabla += "<td>...</td>";
                             tabla += "</tr>";
-                            
+
                         }
 
                         $('#tbRegistro').html(tabla);
@@ -1849,9 +1951,9 @@ function cargarGuardarSupervisor() {
         $("#secundario").show();
         $("#divMainContainer").removeClass("col-12");
         $("#divMainContainer").addClass("col-8");
-        
-        document.getElementById("txtSueldo").type="hidden";
-        document.getElementById("txtSueldo").value=0;
+
+        document.getElementById("txtSueldo").type = "hidden";
+        document.getElementById("txtSueldo").value = 0;
     }
     );
 }
@@ -1873,7 +1975,7 @@ function guardarSupervisor() {
     var apellido = $('#txtApellido').val();
 
     var correo = $('#txtCorreo').val();
-    
+
     var sueldo = $('#txtSueldo').val();
 
     var celular = $('#txtCelular').val();
@@ -1992,7 +2094,7 @@ function cargarModificarSupervisor(posicion) {
         $("#divMainContainer").removeClass("col-12");
         $("#divMainContainer").addClass("col-8");
 
-        document.getElementById("txtSueldo").type="hidden";
+        document.getElementById("txtSueldo").type = "hidden";
     });
 }
 
@@ -2006,7 +2108,7 @@ function modificarSupervisor() {
     var celular = $('#txtCelular').val();
 
     var correo = $('#txtCorreo').val();
-    
+
     var sueldo = $('#txtSueldo').val();
 
     var contrasenia = $('#txtContraseña').val();
@@ -2055,7 +2157,7 @@ function busquedaSupervisor() {
                 data: json,
                 success: function (outPut) {
                     datos = JSON.parse(outPut);
-                    
+
                     auxiliares = datos;
 
                     var tabla = "";
@@ -2075,6 +2177,252 @@ function busquedaSupervisor() {
                     }
 
                     $('#tbAuxiliar').html(tabla);
+
+                }
+
+            }
+    );
+}
+
+
+//***********PASE ASISTENCIA***********
+
+function PasarAsistencia(lat, lon) {
+
+
+    alert("entre " + lat + lon);
+    var idUsuario = localStorage.getItem("idUsuario");
+
+    var latitud = lat;
+
+    var longitud = lon;
+
+    var Asistencia = {
+        idUsuario: idUsuario,
+        latitud: latitud,
+        longitud: longitud
+    };
+
+    var json = {json: JSON.stringify(Asistencia)};
+    //alert(JSON.stringify(json));
+
+    $.ajax({
+        type: "POST",
+        url: "../Controlador/AsistenciaEntrada.php",
+        data: json,
+        success: function (data) {
+            if (data > 0) {
+                alert("se tomo asistencia");
+            } else {
+                alert("ocurrio un error" + data);
+            }
+        }
+
+    }
+    );
+}
+
+function cargarVerListaAsistencia() {
+
+    $.ajax(
+            {
+                type: "GET",
+                url: "Asistencia/listaAsistencia.html",
+                success: function (data) {
+                    //mostrarListaAsistencia();
+                    $('#divMainContainer').html(data);
+                    $("#divMainContainer").addClass("col-12");
+                }
+            }
+    );
+}
+
+function mostrarListaAsistenciaAuxiliar() {
+
+    fechaInicio = $('#fechaInicio').val();
+    fechaFin = $('#fechaFin').val();
+
+    var Busqueda = {
+        fechaInicio: fechaInicio,
+        fechaFin: fechaFin
+    };
+
+    var json = {json: JSON.stringify(Busqueda)};
+
+    $.ajax(
+            {
+                type: "POST",
+                asyc: true,
+                url: "../Controlador/listaAsistenciaAuxiliar.php",
+                data: json,
+                success: function (outPut) {
+                    //alert(JSON.stringify(outPut));
+                    datos = JSON.parse(outPut);
+                    asistencias = datos;
+
+                    var tabla = "";
+
+                    for (var i = 0; i < datos.length; i++) {
+
+                        tabla += "<tr>";
+                        tabla += "<td id='idAsistencia' name='idAsistencia' style='display:none'>" + datos[i].idAsistencia + "</td>";
+                        tabla += "<td>" + datos[i].nombre + "</td>";
+                        tabla += "<td>" + datos[i].apellido + "</td>";
+                        tabla += "<td>" + datos[i].nombreCliente + "</td>";
+                        tabla += "<td>" + datos[i].horaEntrada + "</td>";
+                        tabla += "<td>" + datos[i].horaSalida + "</td>";
+                        tabla += "<td>" + datos[i].fecha + "</td>";
+                        //tabla+="<td><button class='form-control btn btn-success' onclick='tableToExcel('tablaRegistro','REGISTRO ASISTENCIA AUXILIAR')' id='btnExcel'>EXPORTAR A EXCEL</button></td>";
+                        //tabla += "<td><button class='btn btn-warning text-white' onclick='cargarModificarSupervisor(" + i + ")'>Modificar</button></td>";
+                        tabla += "</tr>";
+                    }
+                    tabla += "<td><button class='btn btn-success' onclick=" + '"' + "tableToExcel('tablaRegistro','REGISTRO ASISTENCIA AUXILIAR')" + '"' + "id='btnExcel'>EXPORTAR A EXCEL</button></td>";
+
+                    $('#tbAsistencia').html(tabla);
+                }
+            }
+    );
+}
+
+
+function mostrarListaAsistenciaSupervisor() {
+
+    fechaInicio = $('#fechaInicio').val();
+    fechaFin = $('#fechaFin').val();
+
+    var Busqueda = {
+        fechaInicio: fechaInicio,
+        fechaFin: fechaFin
+    };
+
+    var json = {json: JSON.stringify(Busqueda)};
+    $.ajax(
+            {
+                type: "POST",
+                asyc: true,
+                url: "../Controlador/listaAsistenciaSupervisor.php",
+                data: json,
+                success: function (outPut) {
+                    //alert(JSON.stringify(outPut));
+                    datos = JSON.parse(outPut);
+                    asistencias = datos;
+
+                    var tabla = "";
+
+                    for (var i = 0; i < datos.length; i++) {
+
+                        tabla += "<tr>";
+                        tabla += "<td id='idAsistencia' name='idAsistencia' style='display:none'>" + datos[i].idAsistencia + "</td>";
+                        tabla += "<td>" + datos[i].nombre + "</td>";
+                        tabla += "<td>" + datos[i].apellido + "</td>";
+                        tabla += "<td>" + datos[i].nombreCliente + "</td>";
+                        tabla += "<td>" + datos[i].horaEntrada + "</td>";
+                        tabla += "<td>" + datos[i].horaSalida + "</td>";
+                        tabla += "<td>" + datos[i].fecha + "</td>";
+                        tabla += "</tr>";
+
+                    }
+                    tabla += "<td><button class='btn btn-success' onclick=" + '"' + "tableToExcel('tablaRegistro','REGISTRO ASISTENCIA SUPERVISOR')" + '"' + "id='btnExcel'>EXPORTAR A EXCEL</button></td>";
+                    $('#tbAsistencia').html(tabla);
+                }
+            }
+    );
+}
+
+function busquedaAsistenciaAuxiliar() {
+
+
+    bus = $('#txtSearch').val();
+    fechaInicio = $('#fechaInicio').val();
+    fechaFin = $('#fechaFin').val();
+
+    var Busqueda = {
+        bus: bus,
+        fechaInicio: fechaInicio,
+        fechaFin: fechaFin
+    };
+
+    var json = {json: JSON.stringify(Busqueda)};
+    //alert(JSON.stringify(Busqueda));
+    $.ajax(
+            {
+                type: "POST",
+                url: "../Controlador/buscarAsistenciaAuxiliar.php",
+                data: json,
+                success: function (outPut) {
+                    //alert(outPut);
+                    datos = JSON.parse(outPut);
+                    
+                    asistencias = datos;
+
+                    var tabla = "";
+
+                    for (var i = 0; i < datos.length; i++) {
+
+                        tabla += "<tr>";
+                        tabla += "<td id='idAsistencia' name='idAsistencia' style='display:none'>" + datos[i].idAsistencia + "</td>";
+                        tabla += "<td>" + datos[i].nombre + "</td>";
+                        tabla += "<td>" + datos[i].apellido + "</td>";
+                        tabla += "<td>" + datos[i].nombreCliente + "</td>";
+                        tabla += "<td>" + datos[i].horaEntrada + "</td>";
+                        tabla += "<td>" + datos[i].horaSalida + "</td>";
+                        tabla += "<td>" + datos[i].fecha + "</td>";
+                        tabla += "</tr>";
+
+                    }
+                    tabla += "<td><button class='btn btn-success' onclick=" + '"' + "tableToExcel('tablaRegistro','REGISTRO ASISTENCIA SUPERVISOR')" + '"' + "id='btnExcel'>EXPORTAR A EXCEL</button></td>";
+                    $('#tbAsistencia').html(tabla);
+
+                }
+
+            }
+    );
+}
+
+
+function busquedaAsistenciaSupervisor() {
+
+
+    bus = $('#txtSearch2').val();
+    fechaInicio = $('#fechaInicio').val();
+    fechaFin = $('#fechaFin').val();
+
+    var Busqueda = {
+        bus: bus,
+        fechaInicio: fechaInicio,
+        fechaFin: fechaFin
+    };
+
+    var json = {json: JSON.stringify(Busqueda)};
+    //alert(JSON.stringify(Busqueda));
+    $.ajax(
+            {
+                type: "POST",
+                url: "../Controlador/buscarAsistenciaSupervisor.php",
+                data: json,
+                success: function (outPut) {
+                    //alert(outPut);
+                    datos = JSON.parse(outPut);
+                    
+                    asistencias = datos;
+
+                    var tabla = "";
+
+                    for (var i = 0; i < datos.length; i++) {
+
+                        tabla += "<tr>";
+                        tabla += "<td id='idAsistencia' name='idAsistencia' style='display:none'>" + datos[i].idAsistencia + "</td>";
+                        tabla += "<td>" + datos[i].nombre + "</td>";
+                        tabla += "<td>" + datos[i].apellido + "</td>";
+                        tabla += "<td>" + datos[i].nombreCliente + "</td>";
+                        tabla += "<td>" + datos[i].horaEntrada + "</td>";
+                        tabla += "<td>" + datos[i].horaSalida + "</td>";
+                        tabla += "<td>" + datos[i].fecha + "</td>";
+                        tabla += "</tr>";
+
+                    }
+                    tabla += "<td><button class='btn btn-success' onclick=" + '"' + "tableToExcel('tablaRegistro','REGISTRO ASISTENCIA SUPERVISOR')" + '"' + "id='btnExcel'>EXPORTAR A EXCEL</button></td>";
+                    $('#tbAsistencia').html(tabla);
 
                 }
 

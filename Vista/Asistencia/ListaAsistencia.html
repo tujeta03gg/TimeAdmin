@@ -1,0 +1,48 @@
+<body onload="">   
+    <div class="card">
+        <div class="card-content">
+            <div class="toolbar">
+                <!--        Here you can write extra buttons/actions for the toolbar      
+                -->
+                <div class="togglebutton">
+                    <input class="form-control" id="txtSearch" onkeyup="busquedaAsistenciaAuxiliar()" placeholder="Busqueda Axuliar" type="text">
+                    <input class="form-control" id="txtSearch2" onkeyup="busquedaAsistenciaSupervisor()" placeholder="Busqueda Supervisor" type="text">
+                    <div class="row">
+                        <div class="col-6"><a>Fecha de inicio</a><br><input type="date" id="fechaInicio" value="2021-01-01"></div>
+                        <div class="col-6"><a>Fecha fin</a><br><input type="date" id="fechaFin" value="2021-12-31"></div>
+                    </div><br>
+                    <button onclick="mostrarListaAsistenciaSupervisor()" class="btn btn-success">Mostrar Supervisores</button>
+                    <button onclick="mostrarListaAsistenciaAuxiliar()" class="btn btn-success">Mostrar Auxiliares</button><br>
+                    <!--
+                    <button class='form-control btn btn-success' onclick="tableToExcel('tablaRegistro','REGISTRO ASISTENCIA SUPERVISOR')" id="btnExcel">EXPORTAR A EXCEL "SUPERVISORES"</button><br>
+                    <button class='form-control btn btn-success' onclick="tableToExcel('tablaRegistro','REGISTRO ASISTENCIA AUXILIAR')" id="btnExcel2">EXPORTAR A EXCEL "AUXILIARES"</button>
+                    -->
+                </div>
+            </div>
+            <div class="material-datatables">
+                <div class="table-responsive">
+                    <!--<input class="form-control" id="txtSearch" onkeyup="busquedaAxiliar()" placeholder="Busqueda" type="text">-->
+                    <table class="table" id="tablaRegistro">
+                        <thead>
+                            <tr> 
+                                <th style='display:none'>Num</th>
+                                <th>Nombre</th>  
+                                <th>Apellido</th>  
+                                <th>Cliente</th>                        
+                                <th>Entrada</th>
+                                <th>Salida</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbAsistencia">                                                
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+        <!-- end content-->
+    </div>
+    <!--  end card  -->
+
+</body>

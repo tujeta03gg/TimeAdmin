@@ -1001,7 +1001,8 @@ function cargarTotales() {
 }
 
 function generarTotales() {
-    var total=0;
+    var total = 0;
+    var tabla="";
     fechaInicio = $('#fechaInicio').val();
     fechaFin = $('#fechaFin').val();
     cliente = $('#idCliente').val();
@@ -1016,7 +1017,7 @@ function generarTotales() {
 
     var json = {json: JSON.stringify(Busqueda)};
 
-    var tabla = "<tr>";
+    tabla = "<tr>";
     tabla += "<td><b> Auxiliares </b></td>";
     tabla += "</tr>";
     //PETICION A LOS REGISTROS DE LOS AUXILIARES
@@ -1029,7 +1030,9 @@ function generarTotales() {
                 success: function (outPut) {
                     //alert(JSON.stringify(outPut));
                     if (outPut == 0) {
-                        
+                        tabla += "<tr>";
+                        tabla += "<td><b> Supervisores </b></td>";
+                        tabla += "</tr>";
                     } else {
                         datos = JSON.parse(outPut);
                         registrosAuxiliar = datos;
@@ -1043,17 +1046,18 @@ function generarTotales() {
                             tabla += "<td>" + datos[i].nombreServicio + "</td>";
                             tabla += "<td>" + datos[i].sueldo + "</td>";
                             tabla += "</tr>";
-                            total+=parseFloat(datos[i].sueldo)*parseFloat(datos[i].tiempo);
+                            total += parseFloat(datos[i].sueldo) * parseFloat(datos[i].tiempo);
                         }
-
                         tabla += "<tr>";
                         tabla += "<td><b> Supervisores </b></td>";
                         tabla += "</tr>";
+
                     }
 
                 }
             }
     );
+
     //PETICION A LOS REGISTROS DE LOS SUPERVISORES
 
 
@@ -1067,6 +1071,7 @@ function generarTotales() {
                     //alert(JSON.stringify(outPut));
                     if (outPut == 0) {
                         $('#tbRegistro').html(tabla);
+                        //alert(JSON.stringify(outPut));
                     } else {
                         datos = JSON.parse(outPut);
                         registrosSupervisores = datos;
@@ -1080,16 +1085,16 @@ function generarTotales() {
                             tabla += "<td>" + datos[i].nombreServicio + "</td>";
                             tabla += "<td>" + datos[i].sueldoSupervisor + "</td>";
                             tabla += "</tr>";
-                            total+=parseFloat(datos[i].sueldoSupervisor)*parseFloat(datos[i].tiempo);
+                            total += parseFloat(datos[i].sueldoSupervisor) * parseFloat(datos[i].tiempo);
                         }
-                        
-                        tabla += "<tr>";
-                        tabla += "<td></td><td></td><td></td><td></td> <td><b>"+total+"</b></td>";
-                        tabla += "</tr>";
-                        
-                        $('#tbRegistro').html(tabla);
+                        //alert(datos.length);
                     }
+                    tabla += "<tr>";
+                    tabla += "<td></td><td></td><td></td><td></td> <td><b>" + total + "</b></td>";
+                    tabla += "</tr>";
 
+                    $('#tbRegistro').html(tabla);
+                    
                 }
             }
     );

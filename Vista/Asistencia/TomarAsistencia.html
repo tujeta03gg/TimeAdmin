@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SR Consultores</title>
+        <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js" ></script>	
+        <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="../css/style.css" rel="stylesheet" type="text/css"/>
+        <script src="../js/jquery-1.9.1.min.js" type="text/javascript"></script>
+        
+    </head>
+    <body onload="">
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary" id="navBar">
+            <div class="col-10">
+            </div>
+            <a class="nav-link nav-item" onclick="logout()" href="#">Cerrar Sesion</a>
+        </nav>
+        <div class="row">
+            <div class="col-4"></div>
+            <div><video id="preview"></video></div>
+        </div>
+        <div>
+
+            <div class="material-datatables">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr> 
+                                <th style='display:none'>Num</th>  
+                                <th><h2>Camara</h2></th>  
+                            </tr>
+                        </thead>
+                        <tbody id="tbCamara">
+                        <td>
+                            <label onclick="camara1()">Camara 1</label>
+                        </td>
+                        <td>
+                            <label onclick="camara2()">Camara 2</label>
+                        </td>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+        <script>
+
+            let scanner = new Instascan.Scanner(
+                    {
+                        video: document.getElementById('preview')
+                    }
+            );
+            scanner.addListener('scan', function (content) {
+                //alert('El contenido es: ' + content);
+                var lat = content.substr(0, 15);
+                var lon = content.substr(16, 32);
+                //alert(lat+lon);
+                PasarAsistencia(lat, lon);
+
+            });
+
+            function camara1() {
+                Instascan.Camera.getCameras().then(cameras =>
+                {
+                    scanner.start(cameras[0]);
+                });
+            }
+            function camara2() {
+                Instascan.Camera.getCameras().then(cameras =>
+                {
+                    scanner.start(cameras[1]);
+                });
+            }
+            
+            //******************************************************************************
+            function PasarAsistencia(lat, lon) {
+
+
+                //alert("entre " + lat + lon);
+                var idUsuario = localStorage.getItem("idUsuario");
+
+                var latitud = lat;
+
+                var longitud = lon;
+
+                var Asistencia = {
+                    idUsuario: idUsuario,
+                    latitud: latitud,
+                    longitud: longitud
+                };
+
+                var json = {json: JSON.stringify(Asistencia)};
+                alert(JSON.stringify(json));
+
+                $.ajax({
+                    type: "POST",
+                    url: "../../Controlador/AsistenciaEntrada.php",
+                    data: json,
+                    success: function (data) {
+                        if (data > 0) {
+                            alert("se tomo asistencia");
+                        } else {
+                            alert("ocurrio un error" + data);
+                        }
+                    }
+
+                }
+                );
+            }
+
+        </script>
+
+    </body>
+</html>

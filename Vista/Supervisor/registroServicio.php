@@ -42,8 +42,11 @@ $result3 = mysqli_query($mysqli, $query3);
             }
             ?>
         </select><br>
-        <a>Tiempo</a><br>
-        <input type="text" name="tiempo" id="tiempo" class="form-control"><br>
+        <div><a>Horas</a>
+            <input type="number" name="horas" id="horas" class="form-control" min="0" value="0">
+            <a>Minutos</a>
+            <input type="number" name="minutos" id="minutos" class="form-control" min="0" max="60" value="0">
+        </div><br>
         <button onclick="hacerRegistroSupervisor()" class="btn btn-success form-control">Hacer registro</button>
     </div>
 </div>

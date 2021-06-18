@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SR Consultores</title>
+        <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js" ></script>	
+        <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="../css/style.css" rel="stylesheet" type="text/css"/>
+        <script src="../js/jquery-1.9.1.min.js" type="text/javascript"></script>
+        <script src="../js/funciones.js" type="text/javascript"></script>
+    </head>
+    <body onload="">
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary" id="navBar">
+            <div class="col-10">
+            </div>
+            <a class="nav-link nav-item" onclick="logout()" href="#">Cerrar Sesion</a>
+        </nav>
+        <div class="row">
+            <div class="col-4"></div>
+            <div><video id="preview"></video></div>
+        </div>
+        <div>
+
+            <div class="material-datatables">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr> 
+                                <th style='display:none'>Num</th>  
+                                <th><h2>Camara</h2></th>  
+                            </tr>
+                        </thead>
+                        <tbody id="tbCamara">
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+        <script>
+
+            let scanner = new Instascan.Scanner(
+                    {
+                        video: document.getElementById('preview')
+                    }
+            );
+            scanner.addListener('scan', function (content) {
+                alert('El contenido es: ' + content);
+                window.open(content, "_blank");
+            });
+
+            function activarCamara(i) {
+                Instascan.Camera.getCameras().then(cameras =>
+                {
+                    scanner.start(cameras[i]);
+                });
+            }
+
+            Instascan.Camera.getCameras().then(cameras =>
+            {
+                if (cameras.length > 0) {
+                    var tabla = "";
+
+                    for (var i = 0; i < cameras.length; i++) {
+
+                        tabla += "<tr>";
+                        tabla += "<td id='idCamara' name='idCamara' style='display:none'>" + i + "</td>";
+                        tabla += "<td onclick='activarCamara(" + i + ")'><h2>" + cameras[i].name + "</h2></td>";
+                        tabla += "</tr>";
+                    }
+                    $('#tbCamara').html(tabla);
+                } else {
+                    console.error("No se detectaron camaras!");
+                }
+            });
+            
+        </script>
+
+    </body>
+</html>

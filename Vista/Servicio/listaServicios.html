@@ -6,15 +6,14 @@
         </div>
         <div class="card-content">
             <div class="toolbar">
-                <!--        Here you can write extra buttons/actions for the toolbar      
-                -->
                 <div class="togglebutton">
+                    <button class='form-control btn btn-success' onclick="tableToExcel('tablaServicios','REGISTRO SERVICIOS')" id="btnExcel">EXPORTAR A EXCEL</button>
                 </div>
             </div>
             <div class="material-datatables">
                 <div class="table-responsive">
-                    <!--<input class="form-control" id="txtSearch" onkeyup="busquedaAxiliar()" placeholder="Busqueda" type="text">-->
-                    <table class="table">
+                    <input class="form-control" id="txtSearch" onkeyup="busquedaServicio()" placeholder="Busqueda" type="text">
+                    <table class="table" id="tablaServicios">
                         <thead>
                             <tr> 
                                 <th style='display:none'>Num</th>

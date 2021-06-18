@@ -12,7 +12,9 @@
             'idCliente'=>$datos['idCliente'],
             'nombreCliente'=>$datos['nombreCliente'],
             'rfc'=>$datos['rfc'],
-            'direccion'=>$datos['direccion']
+            'direccion'=>$datos['direccion'],
+            'latitud'=>$datos['latitud'],
+            'longitud'=>$datos['longitud']
         );
     }
     

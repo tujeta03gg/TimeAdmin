@@ -25,6 +25,44 @@
                                         <label class="control-label">Direccion:</label>
                                         <input id="txtDireccion" type="text" class="form-control">
                                     </div> 
+                                    <div>
+                                        <div class="form-group label-floating">
+                                            <label class="control-label">Ubicación</label>
+
+                                            <!----<div id="map"></div>--->
+                                            
+                                            
+                                            <input id="txtLongitud" type="text" disabled>
+
+                                            <input id="txtLatitud" type="text" disabled>
+                                            
+                                            <button onclick="createQrCode()">Gernear QR</button>
+                                        </div>
+
+                                        <input id="coords" type="hidden">    
+
+                                        <script>
+                                            
+                                            
+                                            function createQrCode()
+                                            {
+                                                var lat = document.getElementById("txtLongitud").value;
+                                                var long = document.getElementById("txtLatitud").value;
+
+                                                var qrcode = new QRCode("qrcode", {
+                                                    text: ""+long+","+lat,
+                                                    width: 256,
+                                                    height: 256,
+                                                    colorDark: "black",
+                                                    colorLight: "white",
+                                                    correctLevel: QRCode.CorrectLevel.H
+                                                });
+                                            };
+
+                                        </script>
+                                        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCaGwwAMYqolwe9LmliR_wkKCgjDrTKQVc&AMP;callback=initMap"></script>
+                                    </div>
+                                    <div id="qrcode"></div>
 
                                     <button  onclick="modificarCliente()" type="submit" class="btn btn-fill btn-success">Guardar</button>
 
